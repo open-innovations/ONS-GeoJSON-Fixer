@@ -60,6 +60,8 @@
 		this.el.output.innerHTML = "";
 		this.el.progress.parentNode.classList.remove('done');
 		this.el.progressbar.style.display = "none";
+		this.el.loader.innerHTML = "";
+		this.el.details.innerHTML = "";
 		
 		delete this.geojson;
 		delete this.filecontent;
