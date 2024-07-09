@@ -154,7 +154,7 @@
 		}
 		var _obj = this;
 		this.el.progress.style.width = (100*f/this.geojson.features.length)+'%';
-		
+		if(OI.geojsonRewind) this.geojson = OI.geojsonRewind(this.geojson);
 		if(f < this.geojson.features.length) setTimeout(function(){ _obj.fixGeoJSON(f) },50);
 		else this.finish();
 		return;
