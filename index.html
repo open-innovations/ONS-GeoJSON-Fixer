@@ -31,7 +31,7 @@
 
 	<div id="main" class="tallpadded">
 		<div class="holder">
-				<p>A web-based tool to fix GeoJSON files downloaded from the ONS geoportal.</p>
+				<p>A web-based tool to <a href="#notes">fix</a> GeoJSON files downloaded from the ONS geoportal.</p>
 
 				<form id="validation_form" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 					<div id="drop_zone" class="dropzone">
@@ -60,7 +60,7 @@
 		<div class="holder">
 			<div class="tallpadded">
 				<h2 id="notes">Notes</h2>
-				<p>At Open Innovations we often work with boundaries from the ONS geoportal. Unfortunately, the geoportal often provides invalid GeoJSON files that don't conform to <a href="https://geojson.org/">RFC 7946 (2016)</a> as they contain Ordnance Survey Eastings and Northings rather than WGS 84 latitudes and longitudes. The purpose of this tool is to convert them into something valid. The tool will attempt to fix simple winding errors too.</p>
+				<p>At Open Innovations we often work with boundaries from the ONS geoportal. Unfortunately, the geoportal often provides GeoJSON files that conform to a 2008 definition of GeoJSON rather than <a href="https://geojson.org/">RFC 7946 (2016)</a>. So they generally contain Ordnance Survey Eastings and Northings rather than WGS 84 latitudes and longitudes and they sometimes don't follow the right-hand winding rule. The purpose of this tool is to convert them into something that matches the 2016 definition.</p>
 				<h3>Coordinate transformation</h3>
 				<p>This tool uses <a href="http://files.dixo.net/geotools.html">GeoTools</a> to do <a href="http://www.nearby.org.uk/tests/GeoTools2.html">the coordinate transformations</a>. The GeoTools algorithm for WGS84-OSGB36 conversions is derived from an OSGB spreadsheet (www.gps.gov.uk) with permission. This has been adapted into PHP by Ian Harris, and Irish added by Barry Hunter. Conversion accuracy is in the order of 7m for 90% of Great Britain, and should be  be similar to the conversion made by a typical GPSr. Given the accuracy, we will limit precision on the latitudes/longitudes to 5 decimal places (roughly a metre).</p>
 				<h3>Credits</h3>
