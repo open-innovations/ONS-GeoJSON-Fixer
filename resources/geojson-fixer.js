@@ -127,13 +127,17 @@
 			this.el.progressbar.style.display = 'block';
 		}
 		var fp,g,i,j,k,n = 0,loop = 10000;
+		
+		// Convert coordinates
+		var convertcoords = ("crs" in this.geojson && this.geojson.crs.properties.name.match(/EPSG:+27700/)) ? true : false;
+		console.log(convertcoords,this.geojson.crs.properties.name)
 		for(fp = f; fp < this.geojson.features.length; fp++){
 			g = this.geojson.features[f].geometry;
 			if(g.type=="MultiPolygon"){
 				for(i = 0; i < g.coordinates.length; i++){
 					for(j = 0; j < g.coordinates[i].length; j++){
 						for(k = 0; k < g.coordinates[i][j].length; k++){
-							g.coordinates[i][j][k] = this.convertCoordiates(g.coordinates[i][j][k]);
+							if(convertcoords) g.coordinates[i][j][k] = this.convertCoordiates(g.coordinates[i][j][k]);
 							n++;
 						}
 					}
@@ -141,7 +145,7 @@
 			}else if(g.type=="Polygon"){
 				for(i = 0; i < g.coordinates.length; i++){
 					for(j = 0; j < g.coordinates[i].length; j++){
-						g.coordinates[i][j] = this.convertCoordiates(g.coordinates[i][j]);
+						if(convertcoords) g.coordinates[i][j] = this.convertCoordiates(g.coordinates[i][j]);
 						n++;
 					}
 				}
@@ -152,6 +156,7 @@
 			f++;
 			if(n > loop) fp = this.geojson.features.length;
 		}
+
 		var _obj = this;
 		this.el.progress.style.width = (100*f/this.geojson.features.length)+'%';
 		if(OI.geojsonRewind) this.geojson = OI.geojsonRewind(this.geojson);
@@ -175,7 +180,7 @@
 		};
 		
 		if("crs" in this.geojson){
-			if(this.geojson.crs.properties.name != "EPSG:27700"){
+			if(!this.geojson.crs.properties.name.match(/EPSG:+27700/) && !this.geojson.crs.properties.name.match(/EPSG:+4326/)){
 				this.error("The provided CRS isn't EPSG:27700 so we don't know how to handle it.");
 				return this;
 			}
@@ -183,8 +188,6 @@
 			this.error("The input GeoJSON doesn't contain a CRS.");
 			return this;
 		}
-
-		delete this.geojson.crs;
 
 		this.fixGeoJSON();
 	};
@@ -194,6 +197,8 @@
 		return [+(wgs84.longitude.toFixed(5)),+(wgs84.latitude.toFixed(5))];
 	};
 	Fixer.prototype.finish = function(){
+
+		if("crs" in this.geojson) delete this.geojson.crs;
 
 		this.output = JSON.stringify(this.geojson).replace(/\{\s*\"type\":\s*"Feature",/g,"\n{\"type\":\"Feature\",");
 		this.el.progressbar.style.display = 'none';
